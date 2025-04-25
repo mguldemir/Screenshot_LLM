@@ -157,45 +157,4 @@ class ScreenshotAnalyzer(QMainWindow, Ui_MainWindow):
             QPushButton:hover {
                 background-color: #3a80d2;
             }
-            QPushButton:pressed {
-                background-color: #2a70c2;
-            }
-            QTabWidget::pane {
-                border: none;
-                background-color: #2c2c2c;
-            }
-            QTabBar::tab {
-                background-color: #3c3c3c;
-                color: #ffffff;
-                padding: 10px 20px;
-                margin-right: 2px;
-                border-top-left-radius: 8px;
-                border-top-right-radius: 8px;
-            }
-            QTabBar::tab:selected {
-                background-color: #2c2c2c;
-                color: #4a90e2;
-            }
-            QCheckBox {
-                color: #ffffff;
-            }
-            QComboBox {
-                background-color: #3c3c3c;
-                color: #ffffff;
-                border: none;
-                border-radius: 8px;
-                padding: 12px
-            }
-        """
-    # Eksik metodların sonu
-
-    def load_config(self):
-            dotenv.load_dotenv(SCRLLM_ENV_FILE, override=True)
-            self.LLM_API_MODEL = os.getenv("LLM_API_KEY")
-            self.LLM_MODEL_ID = os.getenv("LLM_MODEL_ID")
-            self.OLLAMA = os.getenv("OLLAMA")        
-            self.DARK_MODE = os.getenv("DARK_MODE")
-            self.ICON_SCHEME = os.getenv("ICON_SCHEME")
-
-    # Diğer metodlar buraya gelecek (değişmeden)
-    # ...
+            QPushButton:
