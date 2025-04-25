@@ -43,15 +43,13 @@ class ScreenshotAnalyzer(QMainWindow, Ui_MainWindow):
 
         self.setup_loading_animation()
 
-    # Eksik metod eklendi
+    # Eksik metodlar buraya eklendi
     def apply_stylesheet(self):
-        # Bu metod, interface.py içindeki Ui_MainWindow sınıfında çağrılıyor
-        if hasattr(self, 'dark_mode') and self.dark_mode:
+        if hasattr(self, 'dark_mode_checkbox') and self.dark_mode_checkbox.isChecked():
             self.setStyleSheet(self.get_dark_stylesheet())
         else:
             self.setStyleSheet(self.get_light_stylesheet())
 
-    # Stil sayfaları için gerekli metodlar
     def get_light_stylesheet(self):
         return """
             QMainWindow, QWidget {
@@ -71,6 +69,28 @@ class ScreenshotAnalyzer(QMainWindow, Ui_MainWindow):
                 background: #c0c0c0;
                 border-radius: 5px;
             }
+            QScrollBar::handle:pressed {
+                background: #a0a0a0;
+            }
+            QLabel {
+                background-color: #f8f8f8;
+            }
+            QTextEdit, QLineEdit {
+                background-color: #f8f8f8;
+                color: #333333;
+            }
+            QPushButton {
+                background-color: #4a90e2;
+                color: white;
+                font-weight: bold;
+                border: none;
+            }
+            QPushButton:hover {
+                background-color: #3a80d2;
+            }
+            QPushButton:pressed {
+                background-color: #2a70c2;
+            }
             QTabWidget::pane {
                 border: none;
                 background-color: #ffffff;
@@ -79,12 +99,23 @@ class ScreenshotAnalyzer(QMainWindow, Ui_MainWindow):
                 background-color: #f0f0f0;
                 color: #333333;
                 padding: 10px 20px;
+                margin-right: 2px;
                 border-top-left-radius: 8px;
                 border-top-right-radius: 8px;
             }
             QTabBar::tab:selected {
                 background-color: #ffffff;
                 color: #4a90e2;
+            }
+            QCheckBox {
+                color: #333333;
+            }
+            QComboBox {
+                background-color: #f8f8f8;
+                color: #333333;
+                border: none;
+                border-radius: 8px;
+                padding: 12px
             }
         """
 
@@ -107,6 +138,28 @@ class ScreenshotAnalyzer(QMainWindow, Ui_MainWindow):
                 background: #5c5c5c;
                 border-radius: 5px;
             }
+            QScrollBar::handle:pressed {
+                background: #7c7c7c;
+            }
+            QLabel {
+                background-color: #3c3c3c;
+            }
+            QTextEdit, QLineEdit {
+                background-color: #3c3c3c;
+                color: #ffffff;
+            }
+            QPushButton {
+                background-color: #4a90e2;
+                color: white;
+                font-weight: bold;
+                border: none;
+            }
+            QPushButton:hover {
+                background-color: #3a80d2;
+            }
+            QPushButton:pressed {
+                background-color: #2a70c2;
+            }
             QTabWidget::pane {
                 border: none;
                 background-color: #2c2c2c;
@@ -115,6 +168,7 @@ class ScreenshotAnalyzer(QMainWindow, Ui_MainWindow):
                 background-color: #3c3c3c;
                 color: #ffffff;
                 padding: 10px 20px;
+                margin-right: 2px;
                 border-top-left-radius: 8px;
                 border-top-right-radius: 8px;
             }
@@ -122,7 +176,18 @@ class ScreenshotAnalyzer(QMainWindow, Ui_MainWindow):
                 background-color: #2c2c2c;
                 color: #4a90e2;
             }
+            QCheckBox {
+                color: #ffffff;
+            }
+            QComboBox {
+                background-color: #3c3c3c;
+                color: #ffffff;
+                border: none;
+                border-radius: 8px;
+                padding: 12px
+            }
         """
+    # Eksik metodların sonu
 
     def load_config(self):
             dotenv.load_dotenv(SCRLLM_ENV_FILE, override=True)
@@ -148,3 +213,43 @@ class ScreenshotAnalyzer(QMainWindow, Ui_MainWindow):
         LLM_MODEL_ID = self.model_id_input.text()
         ICON_SCHEME = self.icon_scheme_combobox.currentText()
         with open(SCRLLM_ENV_FILE, "w") as env_file:
+            env_file.write(f"LLM_API_KEY={LLM_API_MODEL}\n")
+            if LLM_MODEL_ID:
+                env_file.write(f"LLM_MODEL_ID={LLM_MODEL_ID}\n")
+            else:
+                env_file.write(f"LLM_MODEL_ID=\n")
+            
+            if self.ollama_checkbox.isChecked():
+                env_file.write(f"OLLAMA=1\n")
+            else:
+                env_file.write(f"OLLAMA=0\n")
+            if self.dark_mode_checkbox.isChecked():
+                env_file.write("DARK_MODE=1\n")
+            else:
+                env_file.write("DARK_MODE=0\n")
+            if ICON_SCHEME:
+                env_file.write(f"ICON_SCHEME={ICON_SCHEME}")
+            else:
+                env_file.write(f"ICON_SCHEME=")
+        self.load_config()
+        self.model_id_input.setText(self.LLM_MODEL_ID)
+        self.api_key_input.setText(self.LLM_API_MODEL)
+        self.icon_scheme_combobox.setCurrentText(self.ICON_SCHEME)
+
+        self.show_message("Configuration saved successfully!")
+
+
+    def reset_configurations(self):
+        self.LLM_API_MODEL = None
+        self.LLM_MODEL_ID = None
+        self.OLLAMA = "1"
+        self.ollama_checkbox.setChecked(True)
+        self.load_config()
+        with open(SCRLLM_ENV_FILE, "w") as env_file:
+            env_file.write("LLM_API_KEY=\n")
+            env_file.write("LLM_MODEL_ID=\n")
+            env_file.write("OLLAMA=1\n")
+            env_file.write("DARK_MODE=0\n")
+            env_file.write("ICON_SCHEME=default")
+        self.show_message("Configuration reset successfully!")
+        self.api_key_input.
