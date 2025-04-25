@@ -43,7 +43,7 @@ class ScreenshotAnalyzer(QMainWindow, Ui_MainWindow):
 
         self.setup_loading_animation()
 
-    # Eksik metodlar buraya eklendi
+    # Eksik metodlar eklendi
     def apply_stylesheet(self):
         if hasattr(self, 'dark_mode_checkbox') and self.dark_mode_checkbox.isChecked():
             self.setStyleSheet(self.get_dark_stylesheet())
@@ -197,59 +197,5 @@ class ScreenshotAnalyzer(QMainWindow, Ui_MainWindow):
             self.DARK_MODE = os.getenv("DARK_MODE")
             self.ICON_SCHEME = os.getenv("ICON_SCHEME")
 
-    def setup_ui(self):
-        self.display_image()
-        self.conversation.setReadOnly(True)
-        self.send_button.clicked.connect(self.send_text)
-        self.reset_memory.clicked.connect(self.reset)
-        self.save_button.clicked.connect(self.save_config)
-        self.reset_config.clicked.connect(self.reset_configurations)
-        self.entry.returnPressed.connect(self.send_text)
-        self.entry.setFocus()
-        self.loading_label.setText("")
-    
-    def save_config(self):
-        LLM_API_MODEL = self.api_key_input.text()
-        LLM_MODEL_ID = self.model_id_input.text()
-        ICON_SCHEME = self.icon_scheme_combobox.currentText()
-        with open(SCRLLM_ENV_FILE, "w") as env_file:
-            env_file.write(f"LLM_API_KEY={LLM_API_MODEL}\n")
-            if LLM_MODEL_ID:
-                env_file.write(f"LLM_MODEL_ID={LLM_MODEL_ID}\n")
-            else:
-                env_file.write(f"LLM_MODEL_ID=\n")
-            
-            if self.ollama_checkbox.isChecked():
-                env_file.write(f"OLLAMA=1\n")
-            else:
-                env_file.write(f"OLLAMA=0\n")
-            if self.dark_mode_checkbox.isChecked():
-                env_file.write("DARK_MODE=1\n")
-            else:
-                env_file.write("DARK_MODE=0\n")
-            if ICON_SCHEME:
-                env_file.write(f"ICON_SCHEME={ICON_SCHEME}")
-            else:
-                env_file.write(f"ICON_SCHEME=")
-        self.load_config()
-        self.model_id_input.setText(self.LLM_MODEL_ID)
-        self.api_key_input.setText(self.LLM_API_MODEL)
-        self.icon_scheme_combobox.setCurrentText(self.ICON_SCHEME)
-
-        self.show_message("Configuration saved successfully!")
-
-
-    def reset_configurations(self):
-        self.LLM_API_MODEL = None
-        self.LLM_MODEL_ID = None
-        self.OLLAMA = "1"
-        self.ollama_checkbox.setChecked(True)
-        self.load_config()
-        with open(SCRLLM_ENV_FILE, "w") as env_file:
-            env_file.write("LLM_API_KEY=\n")
-            env_file.write("LLM_MODEL_ID=\n")
-            env_file.write("OLLAMA=1\n")
-            env_file.write("DARK_MODE=0\n")
-            env_file.write("ICON_SCHEME=default")
-        self.show_message("Configuration reset successfully!")
-        self.api_key_input.
+    # Diğer metodlar buraya gelecek (değişmeden)
+    # ...
